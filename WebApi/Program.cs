@@ -24,7 +24,7 @@ public class Program
                 .ForJob(jobKey)
                 .WithIdentity("CheckJob-trigger")
                 //This Cron interval can be described as "run every minute" (when second is zero)
-                .WithCronSchedule("0 34 * ? * *")
+                .WithCronSchedule("0 * * ? * *")
             );
         });
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
