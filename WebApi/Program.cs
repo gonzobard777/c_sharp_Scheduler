@@ -16,16 +16,20 @@ public class Program
 
         builder.Services.AddQuartz(q =>
         {
-            // Just use the name of your job that you created in the Jobs folder.
-            var jobKey = new JobKey("CheckJob");
-            q.AddJob<CheckJob>(opts => opts.WithIdentity(jobKey));
+            var addJob = (string name, string cronExpression) =>
+            {
+                var jobKey = new JobKey(name);
+                q.AddJob<CheckJob>(opts => opts.WithIdentity(jobKey));
 
-            q.AddTrigger(opts => opts
-                .ForJob(jobKey)
-                .WithIdentity("CheckJob-trigger")
-                //This Cron interval can be described as "run every minute" (when second is zero)
-                .WithCronSchedule("0 * * ? * *")
-            );
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithCronSchedule(cronExpression)
+                );
+            };
+
+            addJob("EveryMinuteJob", "0 * * ? * *");
+            addJob("Every30SecondJob", "0/30 * * ? * *");
+            
         });
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
