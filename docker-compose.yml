@@ -4,3 +4,8 @@
     build:
       context: .
       dockerfile: WebApi/Dockerfile
+    environment:
+      ASPNETCORE_URLS: "http://+:5000"
+      ASPNETCORE_HTTP_PORTS: 5000
+    ports:
+      - "8088:5000"
